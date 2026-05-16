@@ -1,13 +1,11 @@
 import mysql.connector
-from openai import OpenAI
+import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY")
-)
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model_ai = genai.GenerativeModel("gemini-pro")
 
 # 1. Savienojums ar MySQL
 conn = mysql.connector.connect(
@@ -42,10 +40,11 @@ for db in databases:
 print("\n=== SERVERA KONTEKSTS ===")
 print(konteksts)
 
-# 4. AI ģenerē SQL vaicājumus
+# 4. Gemini ģenerē SQL vaicājumus
 prompt = f"""
 Šis ir MySQL servera struktūras apraksts:
 {konteksts}
+
 Izvēlies 3 svarīgākos agregētos rādītājus, ko var aprēķināt no šiem datiem.
 Katram rādītājam uzraksti:
 1. Nosaukumu
@@ -53,13 +52,9 @@ Katram rādītājam uzraksti:
 3. Kāpēc tas ir svarīgi
 """
 
-response = client.chat.completions.create(
-    model="nvidia/nemotron-3-super-120b-a12b:free",
-    messages=[{"role": "user", "content": prompt}]
-)
-
-print("\n=== AI IETEIKTIE RĀDĪTĀJI ===")
-print(response.choices[0].message.content)
+response = model_ai.generate_content(prompt)
+print("\n=== GEMINI IETEIKTIE RĀDĪTĀJI ===")
+print(response.text)
 
 cursor.close()
 conn.close()
