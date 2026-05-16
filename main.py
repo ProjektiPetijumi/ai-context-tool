@@ -1,11 +1,12 @@
 import mysql.connector
-import google.generativeai as genai
+from openai import OpenAI
 from dotenv import load_dotenv
 import os
-
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model_ai = genai.GenerativeModel("gemini-pro")
+model_ai = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
 
 # 1. Savienojums ar MySQL
 conn = mysql.connector.connect(
@@ -52,9 +53,51 @@ Katram rādītājam uzraksti:
 3. Kāpēc tas ir svarīgi
 """
 
-response = model_ai.generate_content(prompt)
+response = model_ai.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": prompt}]
+)
 print("\n=== GEMINI IETEIKTIE RĀDĪTĀJI ===")
-print(response.text)
+print(response.choices[0].message.content)
+
+# 5. Izpilda AI ieteiktos SQL vaicājumus un apraksta rezultātus
+sql_vaicajumi = [
+    "SELECT SUM(amount) AS total_revenue FROM payments;",
+    "SELECT AVG(amount) AS average_payment FROM payments;",
+    """SELECT o.parent_vertical, SUM(p.amount) AS total_revenue
+       FROM payments p
+       JOIN mandates m ON p.mandate_id = m.id
+       JOIN organisations o ON m.organisation_id = o.id
+       GROUP BY o.parent_vertical
+       ORDER BY total_revenue DESC;"""
+]
+
+print("\n=== AGREGĒTO DATU REZULTĀTI ===")
+rezultati = ""
+for sql in sql_vaicajumi:
+    try:
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        cols = [d[0] for d in cursor.description]
+        rezultati += f"\nSQL: {sql}\nRezultāts: {rows}\nKolonnas: {cols}\n"
+        print(f"\nSQL: {sql}")
+        print(f"Rezultāts: {rows}")
+    except Exception as e:
+        print(f"Kļūda: {e}")
+
+# 6. AI apraksta rezultātus
+apraksts_prompt = f"""
+Šie ir agregēto SQL vaicājumu rezultāti:
+{rezultati}
+
+Apraksti šos rezultātus vienkāršā latviešu valodā, skaidrojot ko tie nozīmē biznesam.
+"""
+apraksts = model_ai.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": apraksts_prompt}]
+)
+print("\n=== AI REZULTĀTU APRAKSTS ===")
+print(apraksts.choices[0].message.content)
 
 cursor.close()
 conn.close()
