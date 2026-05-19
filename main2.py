@@ -2,6 +2,7 @@ import mysql.connector
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import markdown
 
 load_dotenv()
 client = OpenAI(
@@ -74,7 +75,19 @@ def grafiks_uz_base64(fig):
     plt.close(fig)
     return img
 
-html_saturs = "<html><head><meta charset='utf-8'><title>Datu analīze</title></head><body>"
+html_saturs = """<html><head><meta charset='utf-8'><title>Datu analīze</title>
+<style>
+body { font-family: Arial; max-width: 1000px; margin: auto; padding: 20px; background: #f0f2f5; }
+h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+h2 { color: #2980b9; margin-top: 40px; background: #eaf4fb; padding: 10px; border-radius: 5px; }
+p { line-height: 1.6; background: white; padding: 15px; border-left: 4px solid #3498db; border-radius: 3px; }
+img { max-width: 100%; border: 1px solid #ddd; border-radius: 5px; margin: 10px 0; }
+table { border-collapse: collapse; width: 100%; background: white; margin: 10px 0; }
+th { background: #3498db; color: white; padding: 8px 12px; text-align: left; }
+td { border: 1px solid #ddd; padding: 8px 12px; }
+tr:nth-child(even) { background: #f8f9fa; }
+strong { color: #2c3e50; }
+</style></head><body>"""
 html_saturs += f"<h1>Direct Payments Analīze</h1>"
 
 # Vizualizācija 1 - Mēneša maksājumu tendence
@@ -95,6 +108,13 @@ plt.xticks(rotation=45)
 img1 = grafiks_uz_base64(fig)
 html_saturs += f"<h2>1. Mēneša maksājumu tendence</h2><img src='data:image/png;base64,{img1}'/>"
 
+apraksts1 = client.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": f"Apraksti šos datus latviešu valodā. Sniedz 3-4 īsus bullet punktus ar galvenajiem biznesa ieskatiem. Neizmanto tabulas. Dati: {dati1}"}]
+)
+teksts1 = apraksts1.choices[0].message.content if apraksts1 and apraksts1.choices and apraksts1.choices[0].message.content else "Apraksts nav pieejams."
+html_saturs += markdown.markdown(teksts1)
+
 # Vizualizācija 2 - Mandātu tipu skaits
 cursor.execute("SELECT scheme, COUNT(*) as skaits FROM mandates GROUP BY scheme ORDER BY skaits DESC")
 dati2 = cursor.fetchall()
@@ -108,6 +128,13 @@ ax.set_ylabel('Skaits')
 img2 = grafiks_uz_base64(fig)
 html_saturs += f"<h2>2. Mandātu tipu skaits</h2><img src='data:image/png;base64,{img2}'/>"
 
+apraksts2 = client.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": f"Apraksti šos datus latviešu valodā. Sniedz 3-4 īsus bullet punktus ar galvenajiem biznesa ieskatiem. Neizmanto tabulas. Dati: {dati2}"}]
+)
+teksts2 = apraksts2.choices[0].message.content if apraksts2 and apraksts2.choices and apraksts2.choices[0].message.content else "Apraksts nav pieejams."
+html_saturs += markdown.markdown(teksts2)
+
 # Vizualizācija 3 - Valūtu struktūra
 cursor.execute("SELECT currency, SUM(amount) as kopsumma FROM payments GROUP BY currency")
 dati3 = cursor.fetchall()
@@ -118,6 +145,13 @@ ax.pie(y3, labels=x3, autopct='%1.1f%%')
 ax.set_title('Maksājumu valūtu struktūra')
 img3 = grafiks_uz_base64(fig)
 html_saturs += f"<h2>3. Valūtu struktūra</h2><img src='data:image/png;base64,{img3}'/>"
+
+apraksts3 = client.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": f"Apraksti šos datus latviešu valodā. Sniedz 3-4 īsus bullet punktus ar galvenajiem biznesa ieskatiem. Neizmanto tabulas. Dati: {dati3}"}]
+)
+teksts3 = apraksts3.choices[0].message.content if apraksts3 and apraksts3.choices and apraksts3.choices[0].message.content else "Apraksts nav pieejams."
+html_saturs += markdown.markdown(teksts3)
 
 # Vizualizācija 4 - Organizāciju veidi
 cursor.execute("SELECT parent_vertical, COUNT(*) as skaits FROM organisations GROUP BY parent_vertical ORDER BY skaits DESC")
@@ -130,6 +164,13 @@ ax.set_title('Organizāciju veidi')
 plt.xticks(rotation=45, ha='right')
 img4 = grafiks_uz_base64(fig)
 html_saturs += f"<h2>4. Organizāciju veidi</h2><img src='data:image/png;base64,{img4}'/>"
+
+apraksts4 = client.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": f"Apraksti šos datus latviešu valodā. Sniedz 3-4 īsus bullet punktus ar galvenajiem biznesa ieskatiem. Neizmanto tabulas. Dati: {dati4}"}]
+)
+teksts4 = apraksts4.choices[0].message.content if apraksts4 and apraksts4.choices and apraksts4.choices[0].message.content else "Apraksts nav pieejams."
+html_saturs += markdown.markdown(teksts4)
 
 # Vizualizācija 5 - Vidējais maksājums pa mēnešiem
 cursor.execute("""
@@ -148,6 +189,13 @@ ax.set_ylabel('Vidējais (€)')
 plt.xticks(range(len(x5)), x5, rotation=45)
 img5 = grafiks_uz_base64(fig)
 html_saturs += f"<h2>5. Vidējais maksājums pa mēnešiem</h2><img src='data:image/png;base64,{img5}'/>"
+
+apraksts5 = client.chat.completions.create(
+    model="nvidia/nemotron-3-super-120b-a12b:free",
+    messages=[{"role": "user", "content": f"Apraksti šos datus latviešu valodā. Sniedz 3-4 īsus bullet punktus ar galvenajiem biznesa ieskatiem. Neizmanto tabulas. Dati: {dati5}"}]
+)
+teksts5 = apraksts5.choices[0].message.content if apraksts5 and apraksts5.choices and apraksts5.choices[0].message.content else "Apraksts nav pieejams."
+html_saturs += markdown.markdown(teksts5)
 
 html_saturs += "</body></html>"
 
