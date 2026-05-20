@@ -19,3 +19,11 @@ Projekts izstrādāts kā daļa no kursa par AI rīku izstrādi ar MySQL un Powe
 ## Tehnoloģijas
 - Python, MySQL, Gemini API, matplotlib, pandas, BeautifulSoup
 - Power BI Desktop (ar Python vizuāļiem)
+
+## Uzdevums 03 — Atskaišu izveide
+- `ai_context_tool.pbix` — uzlabota Power BI atskaite ar:
+  - Filtri: source (checkbox) un charge_date (datuma diapazons)
+  - Tumšā tēma un latviešu fonti
+  - Paskaidrojumi pie katra vizuāļa
+  - Report Page Tooltip
+  - Interaktīvas pogas ar grāmatzīmēm (Visi kanāli / API skats)
