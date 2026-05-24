@@ -27,3 +27,26 @@ Projekts izstrādāts kā daļa no kursa par AI rīku izstrādi ar MySQL un Powe
   - Paskaidrojumi pie katra vizuāļa
   - Report Page Tooltip
   - Interaktīvas pogas ar grāmatzīmēm (Visi kanāli / API skats)
+
+# Direct Payments Analīze — Power BI Atskaite
+
+## Apraksts
+Power BI atskaite par maksājumu datiem no direct_payments datubāzes.
+
+## Saturs
+- **Lapa 1** — Galvenais dashboard ar filtriem
+- **Lapa 2** — Detalizēta statistika (valūtas, sadalījums)
+- **Tooltip** — Rīku padoma lapa
+
+## Funkcionalitāte
+- Filtri: `source` (checkbox) un `charge_date` (datuma diapazons)
+- Interaktīvas pogas: "Visi kanāli" / "API skats"
+- Tumšā tēma ar latviešu fontiem
+- Paskaidrojumi pie katra vizuāļa
+- Report Page Tooltip
+
+## Dati
+MySQL datubāze `direct_payments` ar tabulām:
+- `payments` — maksājumu dati
+- `mandates` — mandāti
+- `organisations` — organizācijas
