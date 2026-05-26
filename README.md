@@ -50,3 +50,35 @@ MySQL datubāze `direct_payments` ar tabulām:
 - `payments` — maksājumu dati
 - `mandates` — mandāti
 - `organisations` — organizācijas
+
+TMDB Filmu Analīze — Power BI Dashboard
+Projekta apraksts
+Power BI atskaite, kas analizē TMDB (The Movie Database) datus, izmantojot MySQL servera savienojumu. Atskaite vizualizē filmas pēc žanriem, popularitātes un valstīm.
+Datu avots
+
+Serveris: 87.110.123.151
+Datubāze: tmdb
+Galvenās tabulas: movies, genres, movie_genres, production_countries
+
+Atskaites saturs
+Vizualizācijas
+
+📊 Filmas pa žanriem — stabiņu grafiks ar populārāko žanru skaitu
+🏆 TOP 10 populārākās filmas — horizontāls stabiņu grafiks pēc popularity
+🌍 Filmas pa valstīm — gredzena grafiks ar ražotājvalstu sadalījumu
+🔢 Kopējais filmas skaits — KPI kartīte (10 000 filmas)
+
+Funkcionalitāte
+
+🔍 Filtri — žanrs un release_date
+💡 Tooltip lapa — detalizēta info uzsverot peli virs grafikiem
+🔘 Grāmatzīmju pogas — skatu pārslēgšana
+
+Faili
+
+tmdb_analysis.pbix — Power BI atskaites fails
+
+Tehnoloģijas
+
+Power BI Desktop
+MySQL savienojums (DirectQuery / Import)
