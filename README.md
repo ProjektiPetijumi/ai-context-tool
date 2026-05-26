@@ -68,6 +68,50 @@ Vizualizācijas
 🌍 Filmas pa valstīm — gredzena grafiks ar ražotājvalstu sadalījumu
 🔢 Kopējais filmas skaits — KPI kartīte (10 000 filmas)
 
+ZPD Vērtēšanas rīks ar AI analīzi
+Projekta apraksts
+Streamlit web aplikācija skolotājiem ZPD (Zinātniski Pētnieciskais Darbs) vērtēšanai. Aplikācija ļauj ievadīt skolēnu vērtējumus, skatīt statistiku un automātiski analizēt rezultātus ar AI (Claude API).
+Funkcionalitāte
+📝 Ievadīt vērtējumu
+
+Skolotājs ievada skolēna vārdu, uzvārdu, klasi un mācību gadu
+Punkti tiek ievadīti 10 kritērijos (kopā 100 punkti)
+Automātiski aprēķina balli un nosaka vai skolēns kvalificējas uz novadu
+
+📊 Skatīt datus
+
+Tabula ar visiem ievadītajiem vērtējumiem
+Filtri pēc gada, klases un minimālās balles
+
+📈 Statistika un TOP 10
+
+Vispārējā statistika (skolēnu skaits, vidējā balle, max/min punkti)
+TOP 10 skolēni uz novada konkursu (balle ≥ 8, 2025/2026)
+Grafiki: balles sadalījums un vidējā balle pa gadiem
+Statistika pa klasēm
+🤖 AI analīze — automātisks komentārs par klases rezultātiem
+
+Vērtēšanas kritēriji
+KritērijsMaks. punktiKoncepcija16Literatūra10Metodes10Rezultāti20Secinājumi6Ētika2Noformējums12Pienesums4Aizstāvēšana10MI izmantošana10Kopā100
+Instalācija un palaišana
+bashpip install streamlit pandas matplotlib requests
+python -m streamlit run zpd_app.py
+Aplikācija pieejama: http://localhost:8501
+Faili
+
+zpd_app.py — galvenais Streamlit aplikācijas fails
+zpd_rezultati.csv — saglabātie skolēnu vērtējumi (tiek izveidots automātiski)
+
+Tehnoloģijas
+
+Python
+Streamlit
+Pandas
+Matplotlib
+Claude API (AI analīzei)
+
+Dati
+Projekts izmanto izfantazētus skolēnu datus (237 skolēni, 3 mācību gadi, 11 klases) — reālie dati netiek publicēti.
 Funkcionalitāte
 
 🔍 Filtri — žanrs un release_date
